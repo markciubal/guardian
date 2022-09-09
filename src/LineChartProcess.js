@@ -75,7 +75,7 @@ export default function LineChartProcess({data, filterData, enrollment}) {
                 }
                 if (!courseProcessedData[thisCourse]['grades']) {
                     courseProcessedData[thisCourse]['grades'] = {};
-                    courseProcessedData[thisCourse]['grades'][gradeData.GRADE] = 1;
+                    courseProcessedData[thisCourse]['grades'][gradeData.GRADE] = 0;
                 }
                 if (!courseProcessedData[thisCourse]['grades'][gradeData.GRADE]) {
                     courseProcessedData[thisCourse]['grades'][gradeData.GRADE] = {};

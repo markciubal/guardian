@@ -73,30 +73,17 @@ export default class LineChart extends Component {
                     accessor: 'hasClasses',
                     },
                     {
-                    Header: 'Progress Slope',
-                    accessor: 'progressSlope',
-                    sortType: compareNumericString,
+                        Header: 'Composite Score',
+                        accessor: 'composite',
+                        sortType: compareNumericString,
                     },
                     {
-                    Header: 'Class Grade Correlation',
-                    accessor: 'classCorrelation',
-                    sortType: compareNumericString,
+                        Header: 'Pass Rate',
+                        accessor: 'passRate',
                     },
                     {
-                    Header: 'Terms Attended',
-                    accessor: 'termsAttended',
-                    },
-                    {
-                    Header: 'Units Attempted',
-                    accessor: 'unitsAttempted',
-                    },
-                    {
-                    Header: 'Units Passed',
-                    accessor: 'unitsPassed',
-                    },
-                    {
-                    Header: 'Pass Rate',
-                    accessor: 'passRate',
+                        Header: 'Latest GPA',
+                        accessor: 'latestGPA',
                     },
                     {
                         Header: 'Average GPA Performance',
@@ -120,26 +107,41 @@ export default class LineChart extends Component {
                     accessor: 'projectedClassDifficulty',
                     },
                     {
-                    Header: 'Latest GPA',
-                    accessor: 'latestGPA',
+                    Header: 'Progress Slope',
+                    accessor: 'progressSlope',
+                    sortType: compareNumericString,
+                    },
+                    {
+                        Header: 'Major',
+                        accessor: 'major',
+                    },
+                    {
+                    Header: 'Class Grade Correlation',
+                    accessor: 'classCorrelation',
+                    sortType: compareNumericString,
+                    },
+                    {
+                    Header: 'Terms Attended',
+                    accessor: 'termsAttended',
+                    },
+                    {
+                    Header: 'Units Attempted',
+                    accessor: 'unitsAttempted',
+                    },
+                    {
+                    Header: 'Units Passed',
+                    accessor: 'unitsPassed',
                     },
                     {
                     Header: 'Ethnicity',
                     accessor: 'ethnicity',
                     },
-                    {
-                    Header: 'Major',
-                    accessor: 'major',
-                    },
+                    
                     {
                     Header: 'Zip Code',
                     accessor: 'zip',
                     },
-                    {
-                    Header: 'Composite Score',
-                    accessor: 'composite',
-                    sortType: compareNumericString,
-                    },
+                    
                     
                     
                 ];
@@ -518,7 +520,7 @@ export default class LineChart extends Component {
                     } else {
                         var gradeLang = "Grades";
                     }
-                    var averageGrade = (gpaSum/gradeSum).toFixed(1);
+                    var averageGrade = (gpaSum/gradeSum).toFixed(2);
                     courseGPA[course] = averageGrade;
                     courseDataCount[course] = gradeSum;
                     if (courseCounts[course]) {
@@ -621,11 +623,11 @@ export default class LineChart extends Component {
                                             studentData[student].push({
                                                 studentID: (<a id={student.toString() + "_link"} href={"#" + student.toString()}>{student.toString() }</a>),
                                                 term: term,
-                                                termGPA: processed[process][studentNode][term].gpa.toFixed(1),
+                                                termGPA: processed[process][studentNode][term].gpa.toFixed(2),
                                                 course: (<a id={student +"_table_" + processed[process][studentNode][term].courses[i]} href={"#" + processed[process][studentNode][term].courses[i]}>{processed[process][studentNode][term].courses[i]}</a>),
                                                 gradeEarned: processed[process][studentNode][term].grades[i],
                                                 gradeAverage: courseGPA[processed[process][studentNode][term].courses[i]],
-                                                gradeDifference: (Number(processed[process][studentNode][term].grades[i]) - Number(courseGPA[processed[process][studentNode][term].courses[i]])).toFixed(1)
+                                                gradeDifference: (Number(processed[process][studentNode][term].grades[i]) - Number(courseGPA[processed[process][studentNode][term].courses[i]])).toFixed(2)
                                                 
                                             })
                                             // if (!tutorData[processed[process][studentNode][term].courses[i]])
@@ -638,7 +640,7 @@ export default class LineChart extends Component {
                                             if (processed[process][studentNode][term].grades[i] >= 4.0) {
                                                 if (Object.keys(studentEnrollment).length > 0) {
                                                     studentEnrollment.forEach((enrollment) => {
-                                                            if (enrollment.ID === student) {
+                                                            if (enrollment.ID.toString() === student.toString()) {
                                                                 useTutorFlag = true;
                                                             }
                                                         })
@@ -659,7 +661,7 @@ export default class LineChart extends Component {
                                             if (processed[process][studentNode][term].grades[i] < 2.0) {
                                                 if (Object.keys(studentEnrollment).length > 0) {
                                                 studentEnrollment.forEach((enrollment) => {
-                                                         if (enrollment.ID === student) {
+                                                         if (enrollment.ID.toString() === student.toString()) {
                                                             if ((enrollment.SUBJECT_CODE + enrollment.COURSE_NUMBER).toString() === processed[process][studentNode][term].courses[i]) {
                                                                 tutorTableData.push({
                                                                     course: processed[process][studentNode][term].courses[i],
@@ -683,20 +685,20 @@ export default class LineChart extends Component {
                                                 thisTermGPASum = courseGPA[processed[process][studentNode][term].courses[i]];
                                                 
                                                 classAverageData['data'].push(thisTermGPASum);
-                                                gradeComparison.push({ earned: Number(processed[process][studentNode][term].grades[i].toFixed(1)), anticipated: Number(courseGPA[processed[process][studentNode][term].courses[i]])});
+                                                gradeComparison.push({ earned: Number(processed[process][studentNode][term].grades[i].toFixed(2)), anticipated: Number(courseGPA[processed[process][studentNode][term].courses[i]])});
                                             }
                                         } else {
                                             thisTermGPASum = courseGPA[processed[process][studentNode][term].courses[0]]
-                                            gradeComparison.push({ earned: Number(processed[process][studentNode][term].grades[0].toFixed(1)), anticipated: Number(courseGPA[processed[process][studentNode][term].courses[0]])});
+                                            gradeComparison.push({ earned: Number(processed[process][studentNode][term].grades[0].toFixed(2)), anticipated: Number(courseGPA[processed[process][studentNode][term].courses[0]])});
 
                                             for (var i = 1; i < Object.keys(processed[process][studentNode][term].courses).length; i++) {
-                                                gradeComparison.push({ earned: Number(processed[process][studentNode][term].grades[i].toFixed(1)), anticipated: Number(courseGPA[processed[process][studentNode][term].courses[i]])});
+                                                gradeComparison.push({ earned: Number(processed[process][studentNode][term].grades[i].toFixed(2)), anticipated: Number(courseGPA[processed[process][studentNode][term].courses[i]])});
 
                                                 for (var j = 0; j < Object.keys(processed[process][studentNode][term].courses).length; j++) {
 
                                                     if (Object.keys(processed[process][studentNode][term].courses).length === 1) {
                                                         nodeData.push({data: { id: processed[process][studentNode][term].courses[i], label: processed[process][studentNode][term].courses[i] + "\n(Earned: " + processed[process][studentNode][term].grades[i] + "/Average: " + courseGPA[processed[process][studentNode][term].courses[i]] + ")", color: getGPAColor(courseGPA[processed[process][studentNode][term].courses[i]]), parent: studentNode + term }});
-                                                        nodeData.push({data: { source: processed[process][studentNode][term].courses[i], target: processed[process][studentNode][term].courses[j], label: processed[process][studentNode][term].gpa.toFixed(1), color: '#f5f5f5', width: .1, color: getGPAColor(processed[process][studentNode][term].gpa.toFixed(1))}});
+                                                        nodeData.push({data: { source: processed[process][studentNode][term].courses[i], target: processed[process][studentNode][term].courses[j], label: processed[process][studentNode][term].gpa.toFixed(2), color: '#f5f5f5', width: .1, color: getGPAColor(processed[process][studentNode][term].gpa.toFixed(2))}});
                                                         // console.log('j loop');
                                                         
                                                     }
@@ -704,14 +706,14 @@ export default class LineChart extends Component {
                                                     {  
                                                         if (!(processConnections.includes(processed[process][studentNode][term].courses[i]) && !processConnections.includes(processed[process][studentNode][term].courses[j])))
                                                         {
-                                                            if (processed[process][studentNode][term].gpa.toFixed(1) === '0.0') {
+                                                            if (processed[process][studentNode][term].gpa.toFixed(2) === '0.0') {
                                                                 var nodeWidth = .1;
                                                             } else {
-                                                                var nodeWidth = processed[process][studentNode][term].gpa.toFixed(1);
+                                                                var nodeWidth = processed[process][studentNode][term].gpa.toFixed(2);
                                                             }
                                                             nodeData.push({data: { id: processed[process][studentNode][term].courses[i], label: processed[process][studentNode][term].courses[i] + "\n(Earned: " + processed[process][studentNode][term].grades[i] + "/Average: " + + courseGPA[processed[process][studentNode][term].courses[i]] + ")", color: getGPAColor(courseGPA[processed[process][studentNode][term].courses[i]]), parent: studentNode + term }});
                                                             nodeData.push({data: { id: processed[process][studentNode][term].courses[j], label: processed[process][studentNode][term].courses[j] + "\n(Earned: " + processed[process][studentNode][term].grades[j] + "/Average: " + + courseGPA[processed[process][studentNode][term].courses[j]] + ")", color: getGPAColor(courseGPA[processed[process][studentNode][term].courses[j]]), parent: studentNode + term }});
-                                                            nodeData.push({data: { source: processed[process][studentNode][term].courses[i], target: processed[process][studentNode][term].courses[j], label: processed[process][studentNode][term].gpa.toFixed(1), width: nodeWidth/1.2, color: getGPAColor(processed[process][studentNode][term].gpa.toFixed(1))}});
+                                                            nodeData.push({data: { source: processed[process][studentNode][term].courses[i], target: processed[process][studentNode][term].courses[j], label: processed[process][studentNode][term].gpa.toFixed(2), width: nodeWidth/1.2, color: getGPAColor(processed[process][studentNode][term].gpa.toFixed(2))}});
                                                             processConnections.push(processed[process][studentNode][term].courses[i]);
                                                             processConnections.push(processed[process][studentNode][term].courses[j]);
                                                         }
@@ -781,7 +783,7 @@ export default class LineChart extends Component {
                                 classCount++;
                                 var thisChartData = historicalGradesBarChartBuilder(thisCourse, courses[thisCourse]['grades']);
                                 projectedDifficulty = Number(projectedDifficulty) + Number(courseGPA[thisCourse]);
-                                var adjustedForecastGrade = (Number(studentGPADifference[student]) + Number(courseGPA[thisCourse])).toFixed(1);
+                                var adjustedForecastGrade = (Number(studentGPADifference[student]) + Number(courseGPA[thisCourse])).toFixed(2);
                                 thisStudentProjectedGrades.push(<div className="gradeChartCenter" style={{textAlign: 'center', position: 'relative', height: '10vh', width: '10vw', float: 'left'}}><div className="gradeBox" style={{backgroundColor: getGPAColor(courseGPA[thisCourse])}}>{enrollment.TERM_CODE}<br/>{courseGPA[thisCourse]}<br/><div className="gradeBox" style={{margin: '5px', color: 'black', backgroundColor: getGPAColor(adjustedForecastGrade)}}>{adjustedForecastGrade}<br/><span style={{fontSize: '8pt'}}>Based On Averages</span></div><span style={{fontSize: '8pt'}}>(n={courseDataCount[thisCourse]}) {gradeLang}</span></div><Bar data={thisChartData}/></div>);
                             } catch {
                                 classCount--;
@@ -789,7 +791,7 @@ export default class LineChart extends Component {
                             }
                             
                         });
-                        finalDifficulty = (projectedDifficulty/classCount).toFixed(1);
+                        finalDifficulty = (projectedDifficulty/classCount).toFixed(2);
                         if (classCount === 0) {
                             finalDifficulty = 0;
                         }
@@ -926,11 +928,11 @@ export default class LineChart extends Component {
 
                         var benefitValue = 0;
                         if (unitsAttemptedValue > 12) {
-                            benefitValue = ((((unitsActualValue/unitsAttemptedValue)*15))/15).toFixed(1);
+                            benefitValue = ((((unitsActualValue/unitsAttemptedValue)*15))/15).toFixed(2);
                         } else if (unitsAttemptedValue >= 7 && unitsAttemptedValue <= 12) {
-                            benefitValue = (((unitsActualValue/unitsAttemptedValue)*12)/15).toFixed(1);
+                            benefitValue = (((unitsActualValue/unitsAttemptedValue)*12)/15).toFixed(2);
                         } else {
-                            benefitValue = (((unitsActualValue/unitsAttemptedValue)*unitsAttemptedValue)/15).toFixed(1);
+                            benefitValue = (((unitsActualValue/unitsAttemptedValue)*unitsAttemptedValue)/15).toFixed(2);
                         }
 
                         benefitUtilization['data'].push(benefitValue);
@@ -948,9 +950,9 @@ export default class LineChart extends Component {
                     combinationChart['datasets'].push(unitsAttempted);
                     combinationChart['datasets'].push(benefitUtilization);
 
-                    var passRate = (unitsPassed/studentUnitSum).toFixed(1);
+                    var passRate = (unitsPassed/studentUnitSum).toFixed(2);
                     var passColor = getPassRateColor(passRate);
-                    var averageBenefitUtil = average(benefitUtilization['data']).toFixed(1);
+                    var averageBenefitUtil = average(benefitUtilization['data']).toFixed(2);
                     // 
                     var usePassRate = 0;
                     if (passRate === 0)
@@ -968,16 +970,16 @@ export default class LineChart extends Component {
                     dataAggregation['units'] = studentUnitSum;
                     dataAggregation['unitsPassed'] = unitsPassed;
                     dataAggregation['passRate'] = passRate;
-                    dataAggregation['avgUnitsPassedPerTerm'] = Number((unitsPassed/termsAttended).toFixed(1)).toFixed(1);
-                    dataAggregation['benefitUtilization'] = average(benefitUtilization['data']).toFixed(1);
-                    dataAggregation['gpa'] = average(gpaDataset['data']).toFixed(1);
+                    dataAggregation['avgUnitsPassedPerTerm'] = Number((unitsPassed/termsAttended).toFixed(2)).toFixed(2);
+                    dataAggregation['benefitUtilization'] = average(benefitUtilization['data']).toFixed(2);
+                    dataAggregation['gpa'] = average(gpaDataset['data']).toFixed(2);
                     
                     var termsAttendedNormalized = (4-dataAggregation['terms']);
                     if (termsAttendedNormalized <= 0) {
                         termsAttendedNormalized = .001;
                     }
                     // Arbitrary value, relative to how confident the rate of pursuit is based on previous experience.
-                    dataAggregation['projectedBenefitUtil'] = Number((((dataAggregation['avgUnitsPassedPerTerm']*dataAggregation['terms'])/(dataAggregation['terms']*15)))*dataAggregation['passRate']).toFixed(1);
+                    dataAggregation['projectedBenefitUtil'] = Number((((dataAggregation['avgUnitsPassedPerTerm']*dataAggregation['terms'])/(dataAggregation['terms']*15)))*dataAggregation['passRate']).toFixed(2);
                     
                     dataStatistics.push(dataAggregation);
                     if (finalDifficulty === 0) {
@@ -986,7 +988,7 @@ export default class LineChart extends Component {
                     } else {
                         var noDataFlag = '';
                     } 
-                    var difficultyScore = (finalDifficulty*dataAggregation['gpa']).toFixed(1);
+                    var difficultyScore = (finalDifficulty*dataAggregation['gpa']).toFixed(2);
                     
                     if (hasClasses === 'Yes') {
                         var hasClassesValue = 1;
@@ -999,14 +1001,14 @@ export default class LineChart extends Component {
                     // gpaSlope['point1']['y'] = 0;
                     // gpaSlope['point2']['y'] = 0;
                     // gpaSlope['point2']['x'] = 0;
-                    var pSlope = ((gpaSlope['point2']['y']-gpaSlope['point1']['y'])/(gpaSlope['point2']['x']-gpaSlope['point1']['x'])).toFixed(1);
+                    var pSlope = ((gpaSlope['point2']['y']-gpaSlope['point1']['y'])/(gpaSlope['point2']['x']-gpaSlope['point1']['x'])).toFixed(2);
                     var pSlopeAdjusted = 1;
                     if (pSlope === "NaN") {
                         pSlope = "Need data.";
                         pSlopeAdjusted = 0;
                     }
 
-                    var compositeScore = ((4 + pSlopeAdjusted) * (4 + average(aboveOrBelowGrade)) * dataAggregation['passRate'] * dataAggregation['projectedBenefitUtil'] * difficultyScore).toFixed(1);
+                    var compositeScore = ((4 + pSlopeAdjusted) * (4 + average(aboveOrBelowGrade)) * dataAggregation['passRate'] * dataAggregation['projectedBenefitUtil'] * difficultyScore).toFixed(2);
                     var enrollmentDataFound = enrollment.find(e => e.ID.toString() === student.toString());
                     console.log(enrollmentDataFound);
                     try {
@@ -1018,11 +1020,10 @@ export default class LineChart extends Component {
                         var z = "N/A"
                         var major = "N/A"
                     }
-                    
-                    tableData.push({
+                    var thisTableData = {
                         studentID: (<a id={student.toString() + "_link"} href={"#" + student.toString()}>{student.toString() }</a>),
                         hasClasses: hasClasses,
-                        classCorrelation: gradeCorrelationCoefficient['correlationCoefficient'].toFixed(1),
+                        classCorrelation: gradeCorrelationCoefficient['correlationCoefficient'].toFixed(2),
                         progressSlope: pSlope,
                         termsAttended: termsAttended,
                         unitsAttempted: studentUnitSum,
@@ -1032,52 +1033,29 @@ export default class LineChart extends Component {
                         avgBenefitUtil: averageBenefitUtil,
                         projectedBenefitUtil: dataAggregation['projectedBenefitUtil'],
                         projectedClassDifficulty: difficultyScore,
-                        aboveOrBelowGrade: average(aboveOrBelowGrade).toFixed(1),
+                        aboveOrBelowGrade: average(aboveOrBelowGrade).toFixed(2),
                         latestGPA: dataAggregation['gpa'],
                         ethnicity: ethn,
                         major: major,
                         zip: z,
                         composite: compositeScore,
-                    })
+                    };
+                    var thisStudentTableData = [];
+                    thisStudentTableData.push(thisTableData);
+                    tableData.push(thisTableData)
                     if (mathCourse === '') {
                         mathCourse = '(NONE)';
                     }
                     if (englishCourse === '') {
                         englishCourse = '(NONE)';
                     }
-                    
-                    var tableBody = (
-                    <tbody>
-                        <tr>
-                            <td><a id={student.toString() + "_link"} href={"#" + student.toString()}>{student.toString()}</a></td>
-                            <td>{hasClasses}</td>
-                            <td>{average(aboveOrBelowGrade).toFixed(1)}</td>
-                            <td>{pSlope}</td>
-                            <td>{gradeCorrelationCoefficient['correlationCoefficient'].toFixed(1)}</td>
-                            <td>{termsAttended}</td>
-                            <td>{studentUnitSum}</td>
-                            <td>{unitsPassed}</td>
-                            <td style={{backgroundColor: getPassRateColor(dataAggregation['passRate'])}}>{dataAggregation['passRate']}</td>
-                            <td style={{backgroundColor: getActualUnitsColor(dataAggregation['avgUnitsPassedPerTerm'])}}>{dataAggregation['avgUnitsPassedPerTerm']}</td>
-                            <td style={{backgroundColor: getPassRateColor(averageBenefitUtil)}}>{averageBenefitUtil}</td>
-                            <td style={{backgroundColor: getPassRateColor(dataAggregation['projectedBenefitUtil'])}}>{dataAggregation['projectedBenefitUtil']}</td>
-                            <td style={{backgroundColor: getActualUnitsColor(difficultyScore)}}>{difficultyScore}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>{compositeScore}</td>
-                        </tr>
-                    </tbody>);
-                    studentTable.push(tableBody);
+
                     chart.push(
                     <div className={css} style={{border: "5px solid #f5f5f5"}}>
                         <h2 style={{textAlign: 'center'}} id={student.toString()}>{student.toString()}</h2>
                         <h3 style={{textAlign: 'center'}}><a href={'#' + student.toString() + "_link"}>Jump to Table</a></h3>
                         <h4 style={{textAlign: 'center'}}>MATH {mathCourse} | ENGL {englishCourse}</h4>
-                        <table className="table center">
-                            {tableHead}
-                            {tableBody}
-                        </table>
+                        <Table style={{textAlign: 'center'}} columns={tableHeaders} data={thisStudentTableData}/>
                         <Table style={{textAlign: 'center'}} columns={studentDataHeader} data={studentData[student]}/>
 
                         <div className="center" style={{marginBottom: "-50px", position: "relative", height: "400px",  width:"80vw"}}>
@@ -1167,7 +1145,7 @@ export default class LineChart extends Component {
                                 gpaSum += getGradeValue(grade) * coursesOrdered[enrolledCourse]['grades'][grade]
                                 gradeSum += coursesOrdered[enrolledCourse]['grades'][grade]
                             });
-                            var averageGrade = (gpaSum/gradeSum).toFixed(1);
+                            var averageGrade = (gpaSum/gradeSum).toFixed(2);
                             newStudentProjectedGPA.push(averageGrade);
                             courseGPA[enrolledCourse] = averageGrade;
                             buffer.push(<div className="gradeChartCenter" style={{textAlign: 'center', position: 'relative', height: '10vh', width: '10vw', float: 'left'}}><div className="gradeBox" style={{backgroundColor: getGPAColor(averageGrade)}}><span style={{fontSize: '8pt'}}>{groupedResult[enroll][enrolled]['TERM_CODE']}</span><br/>{averageGrade}<br/><span style={{fontSize: '8pt'}}>(n={gradeSum}) {gradeLang}</span></div><Bar data={thisChartData}/></div>)
@@ -1176,7 +1154,7 @@ export default class LineChart extends Component {
                         newStudentCount++;
                         tableNoHistoryData.push({
                             studentID: (<a id={"table_no_enroll_" + groupedResult[enroll][0]['ID']} href={"#no_enroll_" + groupedResult[enroll][0]['ID']}>{groupedResult[enroll][0]['ID']}</a>),
-                            projectedGPA: average(newStudentProjectedGPA).toFixed(1),
+                            projectedGPA: average(newStudentProjectedGPA).toFixed(2),
                             classesRegistered: classesRegistered
                         })
                     }
