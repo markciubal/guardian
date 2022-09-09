@@ -1,115 +1,12 @@
 import React from 'react'
 import { useTable, useSortBy } from 'react-table'
+import getGPAColor from './getGPAColor.js';
+import getPassRateColor from './getPassRateColor.js';
+import getActualUnitsColor from './getActualUnitsColor.js';
+import getGPAPerformanceColor from './getGPAPerformanceColor.js';
+
 const defaultPropGetter = () => ({})
 
-function getGPAColor(gpa) {
-  var gpa = parseFloat(gpa);
-  var gpaColor = '';
-  if (gpa > 3.9) {
-      gpaColor = "#5bff72";
-  } else if (between(gpa, 3.5, 3.9)) {
-      gpaColor = "#93ec49";
-  } else if (between(gpa, 3.0, 3.5)) {
-      gpaColor = "#b5d727";
-  } else if (between(gpa, 2.5, 3.0)) {
-      gpaColor = "#cec20f";
-  } else if (between(gpa, 2.0, 2.5)) {
-      gpaColor = "#dfac14";
-  } else if (between(gpa, 1.5, 2.0)) {
-      gpaColor = "#e99627";
-  } else if (between(gpa, 1, 1.5)) {
-      gpaColor = "#ed803a";
-  } else if (between(gpa, 0.5, 1)) {
-      gpaColor = "#eb6c4b";
-  } else if (between(gpa, 0, 0.5)) {
-      gpaColor = "#e25c5c";
-  }
-  return gpaColor;
-}
-function getGPAPerformanceColor(gpa) {
-  var gpa = parseFloat(gpa);
-  var gpaColor = '';
-  if (gpa > 3.9) {
-      gpaColor = "#5bff72";
-  } else if (between(gpa, 3, 3.9)) {
-      gpaColor = "#93ec49";
-  } else if (between(gpa, 2, 3)) {
-      gpaColor = "#b5d727";
-  } else if (between(gpa, 1, 2)) {
-      gpaColor = "#cec20f";
-  } else if (between(gpa, 0, 1)) {
-      gpaColor = "#dfac14";
-  } else if (between(gpa, -1, 0)) {
-      gpaColor = "#e99627";
-  } else if (between(gpa, -2, -1)) {
-      gpaColor = "#ed803a";
-  } else if (between(gpa, -3, -2)) {
-      gpaColor = "#eb6c4b";
-  } else if (between(gpa, -10, -3)) {
-      gpaColor = "#e25c5c";
-  }
-  return gpaColor;
-}
-function getPassRateColor(passRate) {
-  var passRateNumber = parseFloat(passRate);
-  var passColor = '';
-  if (passRateNumber > 1) {
-      passColor = "#5bff72";
-  } else if (between(passRateNumber, .9, 1)) {
-      passColor = "#5bff72";
-  } else if (between(passRateNumber, .8, .9)) {
-      passColor = "#a0e53d";
-  } else if (between(passRateNumber, .7, .8)) {
-      passColor = "#b5d727";
-  } else if (between(passRateNumber, .6, .7)) {
-      passColor = "#c7c915";
-  } else if (between(passRateNumber, .5, .6)) {
-      passColor = "#d4bb0d";
-  } else if (between(passRateNumber, .4, .5)) {
-      passColor = "#e79d20";
-  } else if (between(passRateNumber, .3, .4)) {
-      passColor = "#eb8e2d";
-  } else if (between(passRateNumber, .2, .3)) {
-      passColor = "#ed803a";
-  } else if (between(passRateNumber, .1, .2)) {
-      passColor = "#ec7346";
-  } else if (between(passRateNumber, 0, .1)) {
-      passColor = "#e25c5c";
-  } 
-  return passColor;
-}
-function getActualUnitsColor(units) {
-  var unitRateNumber = parseFloat(units);
-  var unitColor = '';
-  if (unitRateNumber > 15) {
-      unitColor = "#5bff72";
-  } else if (between(unitRateNumber, 14, 15)) {
-      unitColor = "#5bff72";
-  } else if (between(unitRateNumber, 13, 14)) {
-      unitColor = "#a0e53d";
-  } else if (between(unitRateNumber, 12, 13)) {
-      unitColor = "#b5d727";
-  } else if (between(unitRateNumber, 9, 12)) {
-      unitColor = "#c7c915";
-  } else if (between(unitRateNumber, 8, 9)) {
-      unitColor = "#d4bb0d";
-  } else if (between(unitRateNumber, 7, 8)) {
-      unitColor = "#e79d20";
-  } else if (between(unitRateNumber, 6, 7)) {
-      unitColor = "#eb8e2d";
-  } else if (between(unitRateNumber, 5, 6)) {
-      unitColor = "#ed803a";
-  } else if (between(unitRateNumber, 4, 5)) {
-      unitColor = "#ec7346";
-  } else if (between(unitRateNumber, 3, 4)) {
-      unitColor = "#e96751";
-  } else if (between(unitRateNumber, 2, 3)) {
-      unitColor = "#e25c5c";
-  }  else if (unitRateNumber < 2) {
-      unitColor = "#e25c5c";
-  }
-  return unitColor;
-}
 function between(x, min, max) {
   return x >= min && x <= max;
 }
