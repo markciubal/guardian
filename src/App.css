@@ -1,4 +1,7 @@
-.App {
+.App {}
+
+html {
+  scroll-padding-top: 75px;
 }
 
 .App-logo {
@@ -31,6 +34,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -46,12 +50,12 @@
   justify-content: center;
   align-items: center;
   margin: 25px;
-  padding: 25px;
+  padding: 50px;
 }
 
 .gradeChartCenter {
   /* border: 1px solid; */
-  position: relative; 
+  position: relative;
   margin: 35px;
   padding: 5px;
 }
@@ -60,11 +64,13 @@
   border-radius: 10px;
 
 }
+
 .gradeBox a {
   color: black;
   font-weight: bold;
   text-decoration: none;
 }
+
 .odd {
   background-color: #f1f1f1;
   margin: 50px;
@@ -75,7 +81,11 @@
   margin: 50px;
 }
 
-table, thead, tbody, td, th {
+table,
+thead,
+tbody,
+td,
+th {
   border: 1px solid black;
   padding: 5px;
   border-collapse: collapse;

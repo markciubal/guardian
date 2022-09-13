@@ -3,32 +3,32 @@ import between from './between.js';
 export default function getPassRateColor(passRate) {
     var passRateNumber = parseFloat(passRate);
     var passColor = '';
-    if (passRateNumber === 1) {
-        passColor = "#ededed";
+    if (passRateNumber > 1) {
+        passColor = "#5bff72";
     } else if (between(passRateNumber, .9, 1)) {
-        passColor = "#e0e0e0";
+        passColor = "#5bff72";
     } else if (between(passRateNumber, .8, .9)) {
-        passColor = "#d3d3d3";
+        passColor = "#a0e53d";
     } else if (between(passRateNumber, .7, .8)) {
-        passColor = "#b9b9b9";
+        passColor = "#b5d727";
     } else if (between(passRateNumber, .6, .7)) {
-        passColor = "#acacac";
+        passColor = "#c7c915";
     } else if (between(passRateNumber, .5, .6)) {
-        passColor = "#9f9f9f";
+        passColor = "#d4bb0d";
     } else if (between(passRateNumber, .4, .5)) {
-        passColor = "#919191";
+        passColor = "#e79d20";
     } else if (between(passRateNumber, .3, .4)) {
-        passColor = "#848484";
+        passColor = "#eb8e2d";
     } else if (between(passRateNumber, .2, .3)) {
-        passColor = "#777777";
+        passColor = "#ed803a";
     } else if (between(passRateNumber, .1, .2)) {
-        passColor = "#6a6a6a";
+        passColor = "#ec7346";
     } else if (between(passRateNumber, .0, .1)) {
-        passColor = "#5d5d5d";
+        passColor = "#e96751";
     } else if (between(passRateNumber, .9, 0)) {
-        passColor = "#505050";
+        passColor = "#e25c5c";
     }  else if (between(passRateNumber, -99, 0)) {
-        passColor = "#505050";
+        passColor = "#e25c5c";
     }
     return passColor;
 }

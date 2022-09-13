@@ -4,31 +4,31 @@ export default function getActualUnitsColor(units) {
     var unitRateNumber = parseFloat(units);
     var unitColor = '';
     if (unitRateNumber > 15) {
-        unitColor = "#ededed";
+        unitColor = "#5bff72";
     } else if (between(unitRateNumber, 14, 15)) {
-        unitColor = "#e0e0e0";
+        unitColor = "#5bff72";
     } else if (between(unitRateNumber, 13, 14)) {
-        unitColor = "#d3d3d3";
+        unitColor = "#a0e53d";
     } else if (between(unitRateNumber, 12, 13)) {
-        unitColor = "#c6c6c6";
+        unitColor = "#b5d727";
     } else if (between(unitRateNumber, 9, 12)) {
-        unitColor = "#b9b9b9";
+        unitColor = "#c7c915";
     } else if (between(unitRateNumber, 8, 9)) {
-        unitColor = "#acacac";
+        unitColor = "#d4bb0d";
     } else if (between(unitRateNumber, 7, 8)) {
-        unitColor = "#9f9f9f";
+        unitColor = "#e79d20";
     } else if (between(unitRateNumber, 6, 7)) {
-        unitColor = "#919191";
+        unitColor = "#eb8e2d";
     } else if (between(unitRateNumber, 5, 6)) {
-        unitColor = "#848484";
+        unitColor = "#ed803a";
     } else if (between(unitRateNumber, 4, 5)) {
-        unitColor = "#777777";
+        unitColor = "#ec7346";
     } else if (between(unitRateNumber, 3, 4)) {
-        unitColor = "#6a6a6a";
+        unitColor = "#e96751";
     } else if (between(unitRateNumber, 2, 3)) {
-        unitColor = "#5d5d5d";
+        unitColor = "#e25c5c";
     }  else if (unitRateNumber < 2) {
-        unitColor = "#505050";
+        unitColor = "#e25c5c";
     }
     return unitColor;
 }

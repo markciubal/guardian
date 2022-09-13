@@ -158,6 +158,10 @@ export default class LineChart extends Component {
                 {
                 Header: 'Classes Registered',
                 accessor: 'classesRegistered',
+                },
+                {
+                Header: 'Concern Score',
+                accessor: 'concernScore',
                 }
             ];
             const tableHeaderClass =[
@@ -263,6 +267,7 @@ export default class LineChart extends Component {
             var newRegistrationCharts = [];
             console.log(enrollment);
             var tutorTableData = [];
+            var tutorFirst = [];
             const tutorDataHeader =[
                 {
                 Header: 'Course',
@@ -300,7 +305,7 @@ export default class LineChart extends Component {
                 scales: {
                     y: {
                         min: 0,
-                        max: 21,
+                        max: 36,
                         position: 'left',
                         ticks: {
                             color: '#FFD700'
@@ -316,7 +321,7 @@ export default class LineChart extends Component {
                     },
                     y2: {
                         min: 0,
-                        max: 1,
+                        max: 2,
                         position: 'left',
                         ticks: {
                             color: 'blue'
@@ -621,7 +626,7 @@ export default class LineChart extends Component {
                                         // If this statement isn't included, charts will generate double-connected nodes.
                                         for (var i = 0; i < Object.keys(processed[process][studentNode][term].courses).length; i++) {
                                             studentData[student].push({
-                                                studentID: (<a id={student.toString() + "_link"} href={"#" + student.toString()}>{student.toString() }</a>),
+                                                studentID: (<a key={uuidv4()} id={student.toString() + "_link"} href={"#" + student.toString()}>{student.toString() }</a>),
                                                 term: term,
                                                 termGPA: processed[process][studentNode][term].gpa.toFixed(2),
                                                 course: (<a id={student +"_table_" + processed[process][studentNode][term].courses[i]} href={"#" + processed[process][studentNode][term].courses[i]}>{processed[process][studentNode][term].courses[i]}</a>),
@@ -646,15 +651,21 @@ export default class LineChart extends Component {
                                                         })
                                                 }
                                                 if (useTutorFlag === true) {
+                                                    if (!tutorFirst[processed[process][studentNode][term].courses[i]]) {
+                                                        tutorFirst[processed[process][studentNode][term].courses[i]] = '_first';
+                                                    } else {
+                                                        tutorFirst[processed[process][studentNode][term].courses[i]] = '';
+                                                    }
                                                     tutorTableData.push({
                                                         course: processed[process][studentNode][term].courses[i],
                                                         courseLink: (<a id={student +"_table_" + processed[process][studentNode][term].courses[i]} href={"#" + processed[process][studentNode][term].courses[i]}>{processed[process][studentNode][term].courses[i]}</a>),
                                                         tutorOrNeeds: 'Tutor',
                                                         gradeValue: processed[process][studentNode][term].gradesActual[i],
                                                         gradeEarned: processed[process][studentNode][term].grades[i],
-                                                        studentID: (<a id={student.toString() + "_link"} href={"#" + student.toString()}>{student.toString() }</a>),
+                                                        studentID: (<a id={student.toString() + "_link"} href={"#" + student.toString()}><span id={processed[process][studentNode][term].courses[i] + "_tutor" + tutorFirst[processed[process][studentNode][term].courses[i]]}>{student.toString() }</span></a>),
                                                         term: term
                                                     })
+                                                    
                                                 }
                                             }
                                             var useTutoringFlag = false;
@@ -759,8 +770,8 @@ export default class LineChart extends Component {
                         returningStudentCount++;
                         hasPreviousData.push(student);
                         hasClasses = 'Yes';
-                        projectedHTML.push(<h2 style={{textAlign: 'center'}}>Current Enrollment Information</h2>);
-                        projectedHTML.push(<p style={{textAlign: 'center'}}>These are the grades awarded to students for the classes this student is enrolled in. These are not grades for the current student.</p>);
+                        projectedHTML.push(<h2 style={{textAlign: 'center'}} key={uuidv4()}>Current Enrollment Information</h2>);
+                        projectedHTML.push(<p style={{textAlign: 'center'}} key={uuidv4()} >These are the grades awarded to students for the classes this student is enrolled in. These are not grades for the current student.</p>);
                         studentEnrollment.forEach((enrollment) => {
                             var thisCourse = enrollment.SUBJECT_CODE + enrollment.COURSE_NUMBER;
 
@@ -784,10 +795,10 @@ export default class LineChart extends Component {
                                 var thisChartData = historicalGradesBarChartBuilder(thisCourse, courses[thisCourse]['grades']);
                                 projectedDifficulty = Number(projectedDifficulty) + Number(courseGPA[thisCourse]);
                                 var adjustedForecastGrade = (Number(studentGPADifference[student]) + Number(courseGPA[thisCourse])).toFixed(2);
-                                thisStudentProjectedGrades.push(<div className="gradeChartCenter" style={{textAlign: 'center', position: 'relative', height: '10vh', width: '10vw', float: 'left'}}><div className="gradeBox" style={{backgroundColor: getGPAColor(courseGPA[thisCourse])}}>{enrollment.TERM_CODE}<br/>{courseGPA[thisCourse]}<br/><div className="gradeBox" style={{margin: '5px', color: 'black', backgroundColor: getGPAColor(adjustedForecastGrade)}}>{adjustedForecastGrade}<br/><span style={{fontSize: '8pt'}}>Based On Averages</span></div><span style={{fontSize: '8pt'}}>(n={courseDataCount[thisCourse]}) {gradeLang}</span></div><Bar data={thisChartData}/></div>);
+                                thisStudentProjectedGrades.push(<div className="gradeChartCenter" key={uuidv4()} style={{textAlign: 'center', position: 'relative', height: '10vh', width: '10vw', float: 'left'}}><div className="gradeBox" style={{backgroundColor: getGPAColor(courseGPA[thisCourse])}}>{enrollment.TERM_CODE}<br/>{courseGPA[thisCourse]}<br/><div className="gradeBox" style={{margin: '5px', color: 'black', backgroundColor: getGPAColor(adjustedForecastGrade)}}>{adjustedForecastGrade}<br/><span style={{fontSize: '8pt'}}>Based On Averages</span></div><span style={{fontSize: '8pt'}}>(n={courseDataCount[thisCourse]}) {gradeLang}</span></div><Bar data={thisChartData}/></div>);
                             } catch {
                                 classCount--;
-                                thisStudentProjectedGrades.push(<div className="gradeChartCenter" style={{textAlign: 'center', position: 'relative', height: '10vh', width: '10vw', float: 'left'}}>No data for {thisCourse}</div>);
+                                thisStudentProjectedGrades.push(<div className="gradeChartCenter" key={uuidv4()} style={{textAlign: 'center', position: 'relative', height: '10vh', width: '10vw', float: 'left'}}>No data for {thisCourse}</div>);
                             }
                             
                         });
@@ -927,14 +938,17 @@ export default class LineChart extends Component {
                         benefitUtilization['label'] = student + ' Benefit Utilization';
 
                         var benefitValue = 0;
-                        if (unitsAttemptedValue > 12) {
-                            benefitValue = ((((unitsActualValue/unitsAttemptedValue)*15))/15).toFixed(2);
-                        } else if (unitsAttemptedValue >= 7 && unitsAttemptedValue <= 12) {
-                            benefitValue = (((unitsActualValue/unitsAttemptedValue)*12)/15).toFixed(2);
-                        } else {
-                            benefitValue = (((unitsActualValue/unitsAttemptedValue)*unitsAttemptedValue)/15).toFixed(2);
-                        }
-
+                        var unitsNeeded = 120;
+                        // if (unitsAttemptedValue > 12) {
+                        //     benefitValue = ((((unitsActualValue/unitsAttemptedValue)*15))/15).toFixed(2);
+                        // } else if (unitsAttemptedValue >= 7 && unitsAttemptedValue <= 12) {
+                        //     benefitValue = (((unitsActualValue/unitsAttemptedValue)*12)/15).toFixed(2);
+                        // } else {
+                        //     benefitValue = (((unitsActualValue/unitsAttemptedValue)*unitsAttemptedValue)/15).toFixed(2);
+                        // }
+                        var completionPercentage = unitsActualValue/unitsAttemptedValue;
+                        var averagePassedPerTerm = Number((unitsPassed/termsAttended).toFixed(2)).toFixed(2);
+                        benefitValue = ((averagePassedPerTerm*9)/120).toFixed(2);
                         benefitUtilization['data'].push(benefitValue);
                         benefitUtilization['borderColor'] = 'blue';
 
@@ -955,9 +969,9 @@ export default class LineChart extends Component {
                     var averageBenefitUtil = average(benefitUtilization['data']).toFixed(2);
                     // 
                     var usePassRate = 0;
-                    if (passRate === 0)
+                    if (passRate < 0.01)
                     {
-                        usePassRate = .01;
+                        usePassRate = 0.01;
                     } else  {
                         usePassRate = passRate;
                     }
@@ -1007,13 +1021,13 @@ export default class LineChart extends Component {
                         pSlope = "Need data.";
                         pSlopeAdjusted = 0;
                     }
-
-                    var compositeScore = ((4 + pSlopeAdjusted) * (4 + average(aboveOrBelowGrade)) * dataAggregation['passRate'] * dataAggregation['projectedBenefitUtil'] * difficultyScore).toFixed(2);
+                    // var compositeScore = ((((dataAggregation['gpa']+4)/4)*10) * (((average(aboveOrBelowGrade)+4)/4)*5) * ((usePassRate+2)/2)*20).toFixed(2);
+                    var compositeScore = ((average(aboveOrBelowGrade)+4) * (dataAggregation['passRate']+1) * (dataAggregation['projectedBenefitUtil']) * (difficultyScore + 1) * (usePassRate + 1)).toFixed(3);
                     var enrollmentDataFound = enrollment.find(e => e.ID.toString() === student.toString());
                     console.log(enrollmentDataFound);
                     try {
                         var ethn = enrollmentDataFound.ETHNIC_DESC;
-                        var z = enrollmentDataFound.ADDR_ZIP_5;
+                        var z = enrollmentDataFound.ADDR_ZIP_5; 
                         var major = enrollmentDataFound.MAJOR_DESC;
                     } catch {
                         var ethn = "N/A"
@@ -1021,7 +1035,7 @@ export default class LineChart extends Component {
                         var major = "N/A"
                     }
                     var thisTableData = {
-                        studentID: (<a id={student.toString() + "_link"} href={"#" + student.toString()}>{student.toString() }</a>),
+                        studentID: (<a key={uuidv4()}  id={student.toString() + "_link"} href={"#" + student.toString()}>{student.toString() }</a>),
                         hasClasses: hasClasses,
                         classCorrelation: gradeCorrelationCoefficient['correlationCoefficient'].toFixed(2),
                         progressSlope: pSlope,
@@ -1128,8 +1142,8 @@ export default class LineChart extends Component {
                         var newStudentProjectedGPA = [];
                         var classesRegistered = 0;
                         
-                        buffer.push(<h2 id={"no_enroll_" + groupedResult[enroll][0]['ID']}>{groupedResult[enroll][0]['ID']}</h2>);
-                        buffer.push(<p className="center"><a href={"#table_no_enroll_" + groupedResult[enroll][0]['ID']}>Jump to Table</a></p>);
+                        buffer.push(<h2 id={"no_enroll_" + groupedResult[enroll][0]['ID']} key={uuidv4()} >{groupedResult[enroll][0]['ID']}</h2>);
+                        buffer.push(<p className="center"><a href={"#table_no_enroll_" + groupedResult[enroll][0]['ID']} key={uuidv4()} >Jump to Table</a></p>);
                         Object.keys(groupedResult[enroll]).forEach(function(enrolled) {
                             classesRegistered++;
                             var enrolledCourse = groupedResult[enroll][enrolled]['SUBJECT_CODE'] + groupedResult[enroll][enrolled]['COURSE_NUMBER'];
@@ -1148,14 +1162,27 @@ export default class LineChart extends Component {
                             var averageGrade = (gpaSum/gradeSum).toFixed(2);
                             newStudentProjectedGPA.push(averageGrade);
                             courseGPA[enrolledCourse] = averageGrade;
-                            buffer.push(<div className="gradeChartCenter" style={{textAlign: 'center', position: 'relative', height: '10vh', width: '10vw', float: 'left'}}><div className="gradeBox" style={{backgroundColor: getGPAColor(averageGrade)}}><span style={{fontSize: '8pt'}}>{groupedResult[enroll][enrolled]['TERM_CODE']}</span><br/>{averageGrade}<br/><span style={{fontSize: '8pt'}}>(n={gradeSum}) {gradeLang}</span></div><Bar data={thisChartData}/></div>)
+                            buffer.push(
+                            <>
+                            <div key={uuidv4()} className="gradeChartCenter" style={{textAlign: 'center', position: 'relative', height: '10vh', width: '10vw', float: 'left'}}>
+                                <div className="gradeBox" style={{backgroundColor: getGPAColor(averageGrade)}}>
+                                    <span style={{fontSize: '12t'}}>Course: {enrolledCourse}<br/></span>
+                                    <span style={{fontSize: '8pt'}}>Term: {groupedResult[enroll][enrolled]['TERM_CODE']}
+                                    <br/>Average Grade: {averageGrade}<br/></span>
+                                    <a href={'#' + enrolledCourse + "_tutor_first"}>Find Tutor</a>
+                                    <br/><span style={{fontSize: '8pt'}}>(n={gradeSum}) {gradeLang}</span></div>
+                                    <Bar data={thisChartData}/>
+                                </div>
+                                </>
+                                )
                         });
                         newRegistrationCharts.push(<div style={{wordBreak: 'break-all'}} className="center gradeChartParent"><p>{buffer}</p></div>);
                         newStudentCount++;
                         tableNoHistoryData.push({
                             studentID: (<a id={"table_no_enroll_" + groupedResult[enroll][0]['ID']} href={"#no_enroll_" + groupedResult[enroll][0]['ID']}>{groupedResult[enroll][0]['ID']}</a>),
                             projectedGPA: average(newStudentProjectedGPA).toFixed(2),
-                            classesRegistered: classesRegistered
+                            classesRegistered: classesRegistered,
+                            concernScore: ((4-average(newStudentProjectedGPA))*classesRegistered).toFixed(2)
                         })
                     }
                 } catch (e) {
@@ -1172,13 +1199,13 @@ export default class LineChart extends Component {
                         <div id={"student_snapshot"}><h1 style={{color: "#ffffff"}} >-</h1></div>
                         <h1 style={{clear: 'both', textAlign: 'center'}}>Student Snapshot</h1>
                         <p style={{textAlign: 'center'}} >Click on header to sort, Shift + click for additional sorting.</p>
-                        <Table style={{textAlign: 'center'}} columns={tableHeaders} data={tableData}/>
+                        <Table key={uuidv4()} style={{textAlign: 'center'}} columns={tableHeaders} data={tableData}/>
                         <div id={"student_details"}><h1 style={{color: "#ffffff"}} >-</h1></div>
                         <h1 id={""} style={{clear: 'both', textAlign: 'center'}}>Student Details</h1> 
                         {chart}
-                        <h1 id={""} style={{clear: 'both', textAlign: 'center'}}>Student Forecast Table</h1>
                         <div id={"student_forecast"}><h1 style={{clear: 'both', color: "#ffffff"}} >-</h1></div>
-                        <Table style={{textAlign: 'center'}} columns={tableHeaderNoHistory} data={tableNoHistoryData}/>
+                        <h1 id={""} style={{clear: 'both', textAlign: 'center'}}>Student Forecast Table</h1>
+                        <Table key={uuidv4()} style={{textAlign: 'center'}} columns={tableHeaderNoHistory} data={tableNoHistoryData}/>
                         <div id={"new_student_charts"}><h1 style={{color: "#ffffff"}} >-</h1></div>
                         <h1 id={""} style={{clear: 'both', textAlign: 'center'}}>Student Forecast Charts</h1>
                         <div style={{textAlign: 'center'}} className="center">
@@ -1192,10 +1219,10 @@ export default class LineChart extends Component {
                         <div id={""}><h1 style={{clear: 'both', color: "#ffffff"}} >-</h1></div>
                         <h1 id={"class_table"} style={{color: "#ffffff", clear: 'both', textAlign: 'center'}}>Class Data Table</h1>
                         <h1 id={""} style={{clear: 'both', textAlign: 'center'}}>Class Data Table</h1>
-                        <Table style={{textAlign: 'center'}} columns={tableHeaderClass} data={tableClassData}/>
+                        <Table key={uuidv4()}  style={{textAlign: 'center'}} columns={tableHeaderClass} data={tableClassData}/>
                         <div id={"tutor_center"}><h1 style={{color: "#ffffff"}} >-</h1></div>
                         <h1 id={""} style={{clear: 'both', textAlign: 'center'}}>Tutor Center</h1>
-                        <Table style={{textAlign: 'center'}} columns={tutorDataHeader} data={tutorTableData}/>
+                        <Table key={uuidv4()} style={{textAlign: 'center'}} columns={tutorDataHeader} data={tutorTableData}/>
                         <div id={"statistics_summary"}><h1 style={{color: "#ffffff"}} >-</h1></div>
                         <h1 id={""} style={{clear: 'both', textAlign: 'center'}}>Statistics Summary</h1>
                         {statisticsChart}
