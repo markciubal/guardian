@@ -40,6 +40,7 @@ function App() {
             <NavDropdown.Item href="#class_table">Class Data Table</NavDropdown.Item>
           </NavDropdown>
           <Nav.Link href="#tutor_center">Tutor Center</Nav.Link>
+          <Nav.Link href="#student_notes">Student Notes</Nav.Link>
           <Nav.Link href="#statistics_summary">Statistics Summary</Nav.Link>
         </Nav>
       </Navbar.Collapse>

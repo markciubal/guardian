@@ -245,15 +245,12 @@ export default class LineChart extends Component {
             var noRegistrationCount = 0;
             var processed = this.props.processedData;
             var courses = this.props.courseData[0];
-            console.log(courses);
             var enrollment = this.props.enrollment;
-            console.log(enrollment);
             var chart = [];
             var statisticsChart = [];
             var classChart = [];
             var preChart = [];
             var studentTable = [];
-            studentTable.push(tableHead);
             var hasPreviousData = [];
             var dataStatistics = [];
             var courseGPA = [];
@@ -265,9 +262,10 @@ export default class LineChart extends Component {
             var courseCharts = [];
             var courseCounts = [];
             var newRegistrationCharts = [];
-            console.log(enrollment);
             var tutorTableData = [];
             var tutorFirst = [];
+            var studentNotes = [];
+            var studentNotesJSX = [];
             const tutorDataHeader =[
                 {
                 Header: 'Course',
@@ -313,7 +311,7 @@ export default class LineChart extends Component {
                     },
                     y1: {
                         min: 0,
-                        max: 4,
+                        max: 5,
                         position: 'left',
                         ticks: {
                             color: 'green'
@@ -683,6 +681,10 @@ export default class LineChart extends Component {
                                                                     studentID: (<a id={student.toString() + "_link"} href={"#" + student.toString()}>{student.toString() }</a>),
                                                                     term: enrollment.TERM_CODE
                                                                 })
+                                                                if (!studentNotes[student.toString()]) {
+                                                                    studentNotes[student.toString()] = [];
+                                                                }
+                                                                studentNotes[student.toString()].push('Student may need tutoring for ' + processed[process][studentNode][term].courses[i] + '.')
                                                             }
                                                          }
                                                      })
@@ -984,10 +986,27 @@ export default class LineChart extends Component {
                     dataAggregation['units'] = studentUnitSum;
                     dataAggregation['unitsPassed'] = unitsPassed;
                     dataAggregation['passRate'] = passRate;
+
+                    if (dataAggregation['passRate'] < .75) {
+                        if (!studentNotes[student.toString()]) {
+                            studentNotes[student.toString()] = [];
+                        }
+
+                        studentNotes[student.toString()].push('Student pass rate is below 75%.')
+                    }
+
                     dataAggregation['avgUnitsPassedPerTerm'] = Number((unitsPassed/termsAttended).toFixed(2)).toFixed(2);
                     dataAggregation['benefitUtilization'] = average(benefitUtilization['data']).toFixed(2);
                     dataAggregation['gpa'] = average(gpaDataset['data']).toFixed(2);
                     
+                    if (dataAggregation['gpa'] < 2.5) {
+                        if (!studentNotes[student.toString()]) {
+                            studentNotes[student.toString()] = [];
+                        }
+
+                        studentNotes[student.toString()].push('Student GPA is lower than 2.5.')
+                    }
+
                     var termsAttendedNormalized = (4-dataAggregation['terms']);
                     if (termsAttendedNormalized <= 0) {
                         termsAttendedNormalized = .001;
@@ -995,6 +1014,14 @@ export default class LineChart extends Component {
                     // Arbitrary value, relative to how confident the rate of pursuit is based on previous experience.
                     dataAggregation['projectedBenefitUtil'] = Number((((dataAggregation['avgUnitsPassedPerTerm']*dataAggregation['terms'])/(dataAggregation['terms']*15)))*dataAggregation['passRate']).toFixed(2);
                     
+                    if (dataAggregation['projectedBenefitUtil'] < .75) {
+                        if (!studentNotes[student.toString()]) {
+                            studentNotes[student.toString()] = [];
+                        }
+
+                        studentNotes[student.toString()].push('Student benefit use not optimized, under 75%.')
+                    }
+
                     dataStatistics.push(dataAggregation);
                     if (finalDifficulty === 0) {
                         finalDifficulty = 1+finalDifficulty;
@@ -1021,6 +1048,15 @@ export default class LineChart extends Component {
                         pSlope = "Need data.";
                         pSlopeAdjusted = 0;
                     }
+
+                    if (pSlope < -1) {
+                        if (!studentNotes[student.toString()]) {
+                            studentNotes[student.toString()] = [];
+                        }
+
+                        studentNotes[student.toString()].push('Student has dropped more than one full grade point.')
+                    }
+
                     // var compositeScore = ((((dataAggregation['gpa']+4)/4)*10) * (((average(aboveOrBelowGrade)+4)/4)*5) * ((usePassRate+2)/2)*20).toFixed(2);
                     var compositeScore = ((average(aboveOrBelowGrade)+4) * (dataAggregation['passRate']+1) * (dataAggregation['projectedBenefitUtil']) * (difficultyScore + 1) * (usePassRate + 1)).toFixed(3);
                     var enrollmentDataFound = enrollment.find(e => e.ID.toString() === student.toString());
@@ -1189,6 +1225,12 @@ export default class LineChart extends Component {
                     // console.log(e);
                 }
             });
+            for (const [student, notes] of Object.entries(studentNotes)) {
+                studentNotesJSX.push(<h1>{student}</h1>)
+                for (const [index, note] of Object.entries(notes)) {
+                    studentNotesJSX.push(<p>{index}.) {note}</p>);
+                }
+            }
             this.rendered = true;
             return (
                 <>
@@ -1223,6 +1265,9 @@ export default class LineChart extends Component {
                         <div id={"tutor_center"}><h1 style={{color: "#ffffff"}} >-</h1></div>
                         <h1 id={""} style={{clear: 'both', textAlign: 'center'}}>Tutor Center</h1>
                         <Table key={uuidv4()} style={{textAlign: 'center'}} columns={tutorDataHeader} data={tutorTableData}/>
+                        <div id={"student_notes"}><h1 style={{color: "#ffffff"}} >-</h1></div>
+                        <h1 id={""} style={{clear: 'both', textAlign: 'center'}}>Student Notes</h1>
+                        {studentNotesJSX}
                         <div id={"statistics_summary"}><h1 style={{color: "#ffffff"}} >-</h1></div>
                         <h1 id={""} style={{clear: 'both', textAlign: 'center'}}>Statistics Summary</h1>
                         {statisticsChart}
